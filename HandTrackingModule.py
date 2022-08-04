@@ -34,38 +34,7 @@ class handTracker():
                 h, w, c = image.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 lmlist.append([id, cx, cy])
-            if draw:
-                cv2.circle(image, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
+                if draw:
+                    cv2.circle(image, (cx, cy), 7, (255, 0, 255), cv2.FILLED)
 
         return lmlist
-
-
-def main():
-    cap = cv2.VideoCapture(0)
-    tracker = handTracker()
-
-    # Write fps
-    prevTime = 0
-    currTime = 0
-
-    while True:
-        success, image = cap.read()
-        image = tracker.handsFinder(image)
-        lmList = tracker.positionFinder(image)
-        if len(lmList) != 0:
-            print(lmList[4])
-
-        currTime = time.time()
-        fps = 1 / (currTime - prevTime)
-        prevTime = currTime
-
-        # Put fps counter on the screen
-        cv2.putText(image, str(int(fps)), (0, 25), cv2.FONT_HERSHEY_PLAIN, 2,
-                    (200, 100, 200), 3)
-
-        cv2.imshow("Video", image)
-        cv2.waitKey(1)
-
-
-if __name__ == "__main__":
-    main()

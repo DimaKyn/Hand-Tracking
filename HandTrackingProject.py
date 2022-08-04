@@ -1,7 +1,10 @@
-
+import HandTrackingModule as htm
+import mediapipe as mp
+import cv2
+import time
 
 cap = cv2.VideoCapture(0)
-tracker = handTracker()
+tracker = htm.handTracker()
 
 # Write fps
 prevTime = 0
