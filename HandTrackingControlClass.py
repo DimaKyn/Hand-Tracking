@@ -3,29 +3,25 @@ import HandTrackingModule as htm
 import mediapipe as mp
 import cv2
 import pyautogui
-import webbrowser
-import numpy as np
-import spotify
+
 
 # url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 # webbrowser.register('chrome',
 #                     None, webbrowser.BackgroundBrowser(
 #         "C:\Program Files\Google\Chrome\Application//chrome.exe"))
 
-def delay30(param):
-    pass
-
-
 class HandControl:
 
     # Return whether only one finger is touching the thumb
-    def checkIfTouching(self, x1, y1, x2, y2, x3, y3, x4, y4, x5, y5):
+    @staticmethod
+    def checkIfTouching(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5):
         return (abs(x1 - x2) + abs(y1 - y2) < 30) \
                & (abs(x1 - x3) + abs(y1 - y3) > 60) \
                & (abs(x1 - x4) + abs(y1 - y4) > 60) \
                & (abs(x1 - x5) + abs(y1 - y5) > 60)
 
     # Creates a delay of x seconds between each action
+    @staticmethod
     def delayByX(x):
         time_now = time.time()
         time_delay = time.time() + x
@@ -70,21 +66,21 @@ class HandControl:
                     pyautogui.press('playpause')
                     print("PLAY")
                     # Create a 0.7-second delay
-                    delay30(0.5)
+                    delayByX(0.8)
 
                 # Next Track (Middle finger and thumb touching)
                 if self.checkIfTouching(x1, y1, x3, y3, x2, y2, x4, y4, x5, y5):
                     pyautogui.press('nexttrack')
-                    print("Previous Track")
+                    print("Next Track")
                     # Create a 0.7-second delay
-                    delay30(0.5)
+                    delayByX(0.8)
 
                 # Previous track (Thumb and pinky finger touching)
                 if self.checkIfTouching(x1, y1, x4, y4, x2, y2, x3, y3, x5, y5):
                     pyautogui.press('prevtrack')
                     print("Previous Track")
                     # Create a 0.7-second delay
-                    delay30(0.5)
+                    delayByX(0.8)
 
                 if self.checkIfTouching(x1, y1, x5, y5, x2, y2, x3, y3, x4, y4):
                     print("HAND CONTROL - OFF")
