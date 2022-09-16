@@ -1,3 +1,4 @@
+import random
 import time
 import wave
 import webbrowser
@@ -125,8 +126,12 @@ class HandControl:
                     play_artist(spotify=spotify, device_id=deviceID, uri=uri)
                     break
                 elif words[0] == 'play':
-                    uri = get_track_uri(spotify=spotify, name=name)
-                    play_track(spotify=spotify, device_id=deviceID, uri=uri)
+                    if (words[1] == "liked" and words[2] == "songs"):
+                        pass
+                        play_liked_songs(spotify=spotify)
+                    else:
+                        uri = get_track_uri(spotify=spotify, name=name)
+                        play_track(spotify=spotify, device_id=deviceID, uri=uri)
                     break
                 elif words[0] == 'nevermind':
                     break
@@ -140,6 +145,10 @@ class HandControl:
                 elif words[0] == "language" and words[1] == "english":
                     language = "en-US"
                     continue
+                elif words[0] == "playlist":
+                    uri = get_playlist_uri(spotify=spotify, name=name)
+                    play_playlist(spotify=spotify, device_id=deviceID, uri=uri)
+                    break
                 else:
                     print('Specify either "album", "artist" or "play". Try Again')
                     break

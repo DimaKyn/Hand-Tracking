@@ -62,8 +62,34 @@ def get_track_uri(spotify: Spotify, name: str) -> str:
     return track_uri
 
 
+def get_playlist_uri(spotify: Spotify, name: str) -> str:
+    """
+    :param spotify: Spotify object to make the search from
+    :param name: track name
+    :return: Spotify uri of the desired track
+    """
+
+    # Replace all spaces in name with '+'
+    original = name
+    name = name.replace(' ', '+')
+
+    results = spotify.search(q=name, limit=1, type='playlist')
+    if not results['playlists']['items']:
+        raise InvalidSearchError(f'No track named "{original}"')
+    track_uri = results['playlists']['items'][0]['uri']
+    return track_uri
+
+
+def play_liked_songs(spotify: Spotify) -> str:
+    pass
+
+
 def queue_track(spotify=None, device_id=None, uri=None):
     spotify.add_to_queue(device_id=None, uri=uri)
+
+
+def play_playlist(spotify=None, device_id=None, uri=None):
+    spotify.start_playback(device_id=device_id, context_uri=uri)
 
 
 def play_album(spotify=None, device_id=None, uri=None):
