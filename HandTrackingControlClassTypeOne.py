@@ -3,15 +3,8 @@ import HandTrackingModule as htm
 import mediapipe as mp
 import cv2
 import pyautogui
-
-
 import GlobalVariables as gv
 
-
-# url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-# webbrowser.register('chrome',
-#                     None, webbrowser.BackgroundBrowser(
-#         "C:\Program Files\Google\Chrome\Application//chrome.exe"))
 
 class HandControl:
 
@@ -95,7 +88,7 @@ class HandControl:
 
                 if self.checkIfTouching(x1, y1, x5, y5, x2, y2, x3, y3, x4, y4) \
                         & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    gv.CURR_OPERATION = "HAND CONTROL MODE"
+                    gv.CURR_OPERATION = "VOICE CONTROL MODE"
 
                     # Used for removing text from the screen after 3 seconds
                     gv.THREE_SECONDS_PASSED = time.time()

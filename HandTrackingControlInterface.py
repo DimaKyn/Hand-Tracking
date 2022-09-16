@@ -8,7 +8,7 @@ import HandTrackingControlClassTypeTwo as htcc2
 
 def main():
     while True:
-        global CURR_OPERATION
+
         print("mode1")
         control_class1 = htcc1.HandControl()
         control_class1.Hand_Control()

@@ -1,22 +1,26 @@
 import time
+import wave
+import webbrowser
+
+import pyaudio
+from playsound import playsound
+
 import HandTrackingModule as htm
-import mediapipe as mp
 import cv2
 import pyautogui
 import pandas as pd
-import spotipy as sp
+from speech_recognition import Microphone, Recognizer, UnknownValueError, AudioData
+import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from pydub import AudioSegment
+from pydub.playback import play
+import os
+
+from MethodsFile import *
 import GlobalVariables as gv
 
 
-# url = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-# webbrowser.register('chrome',
-#                     None, webbrowser.BackgroundBrowser(
-#         "C:\Program Files\Google\Chrome\Application//chrome.exe"))
-
 class HandControl:
-
-
 
     # Return whether only one finger is touching the thumb
     @staticmethod
@@ -34,71 +38,112 @@ class HandControl:
         # tracker is a hand tracker class
         tracker = htm.handTracker()
 
-        # Display image, find hands, then find their position
+        ######################################################
+        # Set variables from setup.txt
+        setup = pd.read_csv('setup.txt', sep='=', index_col=0, squeeze=True, header=None)
+
+        client_id = setup['client_id']
+        client_secret = setup['client_secret']
+        device_name = setup['device_name']
+        redirect_uri = setup['redirect_uri']
+        scope = setup['scope']
+        username = setup['username']
+
+        # Connecting to the Spotify account
+        auth_manager = SpotifyOAuth(
+            client_id=client_id,
+            client_secret=client_secret,
+            redirect_uri=redirect_uri,
+            scope=scope,
+            username=username)
+        spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+        # Selecting device to play from
+        devices = spotify.devices()
+
+        deviceID = None
+        for d in devices['devices']:
+            print(devices['devices'])
+            d['name'] = d['name'].replace('’', '\'')
+            if d['name'] == device_name:
+                deviceID = d['id']
+
+        # Setup microphone and speech recognizer
+        r = Recognizer()
+        m = None
+
+        # input_mic = 'Line (2- Steinberg UR22mkII )'  # Use whatever is your desired input
+        # for i, microphone_name in enumerate(Microphone.list_microphone_names()):
+        #     if microphone_name == input_mic:
+        #         m = Microphone(device_index=i)
+
+        #
+        # spotify.pause_playback(device_id=deviceID)
+        # If there is no spotify device active, open a new spotify tab and set volume to 50%
+        try:
+            spotify.volume(volume_percent=50)
+        except Exception:
+            os.system("start \"\" https://open.spotify.com")
+        finally:
+            spotify.volume(volume_percent=50)
+
+        # Sets the default language to English
+        language = "en-US"
         while True:
-            success, image = cap.read()
-            image = tracker.handsFinder(image)
-            lmList, xlmList, ylmList = tracker.positionFinder(image)
+            """
+            Commands will be entered in the specific format explained here:
+             - the first word will be one of: 'album', 'artist', 'play'
+             - then the name of whatever item is wanted
+            """
+            with Microphone() as source:
+                print("Recording")
+                r.adjust_for_ambient_noise(source=source)
+                audio = r.listen(source=source)
 
-            if len(lmList) != 0:
+            command = None
+            try:
+                command = r.recognize_google(audio_data=audio, language=language).lower()
+                print(f"You said: {command}\n ")
+            except UnknownValueError:
+                print("Exception")
+                continue
 
-                # Thumb
-                x1, y1 = xlmList[4], ylmList[4]
-                # Index finger coordinates
-                x2, y2 = xlmList[8], ylmList[8]
-                # Middle finger coordinates
-                x3, y3 = xlmList[12], ylmList[12]
-                # Ring finger coordinates
-                x4, y4 = xlmList[16], ylmList[16]
-                # Pinky finger
-                x5, y5 = xlmList[20], ylmList[20]
+            words = command.split()
 
-                if gv.CURR_TIME <= gv.PREV_TIME + 2:
-                    cv2.putText(image, str(gv.CURR_OPERATION), (10, 50), cv2.FONT_HERSHEY_PLAIN, 2,
-                                (200, 100, 200), 3)
+            if len(command) <= 1:
+                print('Could not understand. Try again')
+                continue
 
-                gv.CURR_TIME = time.time()
-
-                # Play music (Insures middle finger is close to ring finger) 👌
-                if self.checkIfTouching(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5) \
-                        & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pyautogui.press('nexttrack')
-                    gv.CURR_OPERATION = "NEXT TRACK"
-
-                    # Used for removing text from the screen after 3 seconds
-                    gv.THREE_SECONDS_PASSED = time.time()
-                    gv.PREV_TIME = gv.CURR_TIME
-
-                # Next Track (Middle finger and thumb touching)
-                if self.checkIfTouching(x1, y1, x3, y3, x2, y2, x4, y4, x5, y5) \
-                        & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pass
-
-                    # Used for removing text from the screen after 3 seconds
-                    gv.THREE_SECONDS_PASSED = time.time()
-                    gv.PREV_TIME = gv.CURR_TIME
-
-                # Previous track (Thumb and pinky finger touching)
-                if self.checkIfTouching(x1, y1, x4, y4, x2, y2, x3, y3, x5, y5) \
-                        & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pass
-
-                    # Used for removing text from the screen after 3 seconds
-                    gv.THREE_SECONDS_PASSED = time.time()
-                    gv.PREV_TIME = gv.CURR_TIME
-
-                if self.checkIfTouching(x1, y1, x5, y5, x2, y2, x3, y3, x4, y4) \
-                        & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    gv.CURR_OPERATION = "VOICE CONTROL MODE"
-                    pass
-
-                    # Used for removing text from the screen after 3 seconds
-                    gv.THREE_SECONDS_PASSED = time.time()
-                    gv.PREV_TIME = gv.CURR_TIME
+            name = ' '.join(words[1:])
+            try:
+                if words[0] == 'album':
+                    uri = get_album_uri(spotify=spotify, name=name)
+                    play_album(spotify=spotify, device_id=deviceID, uri=uri)
                     break
-
-                cv2.imshow("Video", image)
-                cv2.waitKey(1)
-
-            cv2.imshow("Video", image)
-            cv2.waitKey(1)
+                elif words[0] == 'artist':
+                    uri = get_artist_uri(spotify=spotify, name=name)
+                    play_artist(spotify=spotify, device_id=deviceID, uri=uri)
+                    break
+                elif words[0] == 'play':
+                    uri = get_track_uri(spotify=spotify, name=name)
+                    play_track(spotify=spotify, device_id=deviceID, uri=uri)
+                    break
+                elif words[0] == 'nevermind':
+                    break
+                elif words[0] == 'queue' or words[0] == 'q' or words[0] == 'you':
+                    uri = get_track_uri(spotify=spotify, name=name)
+                    queue_track(spotify=spotify, uri=uri)
+                    break
+                elif words[0] == "language" and words[1] == "russian":
+                    language = "ru-RU"
+                    continue
+                elif words[0] == "language" and words[1] == "english":
+                    language = "en-US"
+                    continue
+                else:
+                    print('Specify either "album", "artist" or "play". Try Again')
+                    break
+            except InvalidSearchError:
+                print('InvalidSearchError. Try Again')
+        spotify.volume(volume_percent=100)
+        ######################################################
