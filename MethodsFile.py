@@ -80,16 +80,24 @@ def get_playlist_uri(spotify: Spotify, name: str) -> str:
     return track_uri
 
 
-def play_liked_songs(spotify: Spotify) -> str:
-    pass
-
-
 def queue_track(spotify=None, device_id=None, uri=None):
-    spotify.add_to_queue(device_id=None, uri=uri)
+    spotify.add_to_queue(device_id=device_id, uri=uri)
 
 
 def play_playlist(spotify=None, device_id=None, uri=None):
     spotify.start_playback(device_id=device_id, context_uri=uri)
+
+
+def play_liked_songs(spotify=None, device_id=None, uri=None):
+    spotify.start_playback(device_id=device_id, context_uri=uri)
+
+
+def pause_play(spotify=None, device_id=None):
+    spotify.pause_playback(device_id=device_id)
+
+
+def start_play(spotify=None, device_id=None):
+    spotify.start_playback(device_id=device_id)
 
 
 def play_album(spotify=None, device_id=None, uri=None):

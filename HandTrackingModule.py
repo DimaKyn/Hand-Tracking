@@ -1,7 +1,5 @@
 import cv2
-import mediapipe as mp
-
-
+import mediapipe as mps
 
 class handTracker():
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5, modelComplexity=1, trackCon=0.5):
@@ -12,7 +10,7 @@ class handTracker():
         self.trackCon = trackCon
 
         # Mediapipe hands
-        self.mpHands = mp.solutions.hands
+        self.mpHands = mps.solutions.hands
 
         # hands is a Hands object
         # Hands(Keep tracking when no hand is found[T/F],maxNumOfHands INT,...
@@ -20,7 +18,7 @@ class handTracker():
         self.hands = self.mpHands.Hands(self.mode, self.maxHands, self.modelComplex,
                                         self.detectionCon, self.trackCon)
         # Method for drawing lines between every dot on the hand
-        self.mpDraw = mp.solutions.drawing_utils
+        self.mpDraw = mps.solutions.drawing_utils
 
     def handsFinder(self, image, draw=True):
         # Image object

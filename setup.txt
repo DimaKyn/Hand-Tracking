@@ -1,6 +1,6 @@
 client_id=287cf6980bd34b6ea623fa0b0e9c4d05
 client_secret=6f962df76e3f4129aa364ef328186ae9
-device_name=Dima.DESKTOP-P1QA86M
+device_name=
 redirect_uri=http://google.com
-username=21o4lgzzt6kskgnjofor5yowy
+username=
 scope=user-read-private user-read-playback-state user-modify-playback-state

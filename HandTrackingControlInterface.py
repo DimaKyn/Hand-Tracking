@@ -2,21 +2,13 @@ import HandTrackingControlClassTypeOne as htcc1
 import HandTrackingControlClassTypeTwo as htcc2
 
 
-
-
-
-
 def main():
     while True:
+        control_class = htcc1.HandControl()
+        control_class.Hand_Control()
 
-        print("mode1")
-        control_class1 = htcc1.HandControl()
-        control_class1.Hand_Control()
-
-        print("mode2")
-        control_class2 = htcc2.HandControl()
-        control_class2.Hand_Control()
-
+        control_class = htcc2.HandControl()
+        control_class.Hand_Control()
 
 
 if __name__ == "__main__":

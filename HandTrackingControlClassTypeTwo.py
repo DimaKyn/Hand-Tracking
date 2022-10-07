@@ -1,45 +1,16 @@
-import random
-import time
-import wave
-import webbrowser
-
-import pyaudio
-from playsound import playsound
-
-import HandTrackingModule as htm
-import cv2
-import pyautogui
-import pandas as pd
-from speech_recognition import Microphone, Recognizer, UnknownValueError, AudioData
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from pydub import AudioSegment
-from pydub.playback import play
 import os
+import pandas as pd
+import spotipy
+from speech_recognition import Microphone, Recognizer, UnknownValueError
+from spotipy.oauth2 import SpotifyOAuth
 
 from MethodsFile import *
-import GlobalVariables as gv
 
 
 class HandControl:
 
-    # Return whether only one finger is touching the thumb
-    @staticmethod
-    def checkIfTouching(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5):
-        return (abs(x1 - x2) + abs(y1 - y2) < 30) \
-               & (abs(x1 - x3) + abs(y1 - y3) > 60) \
-               & (abs(x1 - x4) + abs(y1 - y4) > 60) \
-               & (abs(x1 - x5) + abs(y1 - y5) > 60)
-
     # Music player hand control
     def Hand_Control(self):
-        # Uses the i webcam
-        cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-
-        # tracker is a hand tracker class
-        tracker = htm.handTracker()
-
-        ######################################################
         # Set variables from setup.txt
         setup = pd.read_csv('setup.txt', sep='=', index_col=0, squeeze=True, header=None)
 
@@ -64,14 +35,12 @@ class HandControl:
 
         deviceID = None
         for d in devices['devices']:
-            print(devices['devices'])
             d['name'] = d['name'].replace('’', '\'')
             if d['name'] == device_name:
                 deviceID = d['id']
 
         # Setup microphone and speech recognizer
         r = Recognizer()
-        m = None
 
         # input_mic = 'Line (2- Steinberg UR22mkII )'  # Use whatever is your desired input
         # for i, microphone_name in enumerate(Microphone.list_microphone_names()):
@@ -83,7 +52,7 @@ class HandControl:
         # If there is no spotify device active, open a new spotify tab and set volume to 50%
         try:
             spotify.volume(volume_percent=50)
-        except Exception:
+        except spotipy.exceptions.SpotifyException:
             os.system("start \"\" https://open.spotify.com")
         finally:
             spotify.volume(volume_percent=50)
@@ -101,17 +70,17 @@ class HandControl:
                 r.adjust_for_ambient_noise(source=source)
                 audio = r.listen(source=source)
 
-            command = None
             try:
                 command = r.recognize_google(audio_data=audio, language=language).lower()
                 print(f"You said: {command}\n ")
             except UnknownValueError:
-                print("Exception")
                 continue
 
             words = command.split()
 
-            if len(command) <= 1:
+            if len(words) <= 1:
+                if words[0] == "nevermind":
+                    break
                 print('Could not understand. Try again')
                 continue
 
@@ -126,14 +95,8 @@ class HandControl:
                     play_artist(spotify=spotify, device_id=deviceID, uri=uri)
                     break
                 elif words[0] == 'play':
-                    if (words[1] == "liked" and words[2] == "songs"):
-                        pass
-                        play_liked_songs(spotify=spotify)
-                    else:
-                        uri = get_track_uri(spotify=spotify, name=name)
-                        play_track(spotify=spotify, device_id=deviceID, uri=uri)
-                    break
-                elif words[0] == 'nevermind':
+                    uri = get_track_uri(spotify=spotify, name=name)
+                    play_track(spotify=spotify, device_id=deviceID, uri=uri)
                     break
                 elif words[0] == 'queue' or words[0] == 'q' or words[0] == 'you':
                     uri = get_track_uri(spotify=spotify, name=name)
@@ -150,9 +113,11 @@ class HandControl:
                     play_playlist(spotify=spotify, device_id=deviceID, uri=uri)
                     break
                 else:
-                    print('Specify either "album", "artist" or "play". Try Again')
+                    print('Specify either "album", "artist", "play", "playlist", or "language". Try Again')
                     break
             except InvalidSearchError:
                 print('InvalidSearchError. Try Again')
+
         spotify.volume(volume_percent=100)
+
         ######################################################

@@ -1,14 +1,15 @@
-import time
 import HandTrackingModule as htm
-import mediapipe as mp
+import time
 import cv2
-import pyautogui
+import pandas as pd
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+
+from MethodsFile import *
 import GlobalVariables as gv
 
 
 class HandControl:
-
-    isPlaying = False
 
     # Return whether only one finger is touching the thumb
     @staticmethod
@@ -26,16 +27,46 @@ class HandControl:
         # tracker is a hand tracker class
         tracker = htm.handTracker()
 
-        # Write fps
-        threeSecondsPassed = 0
-        prevTime = 0
-        currTime = 0
+        ######################################################
+        # Set variables from setup.txt
+        setup = pd.read_csv('setup.txt', sep='=', index_col=0, squeeze=True, header=None)
+
+        client_id = setup['client_id']
+        client_secret = setup['client_secret']
+        device_name = setup['device_name']
+        redirect_uri = setup['redirect_uri']
+        scope = setup['scope']
+        username = setup['username']
+
+        # Connecting to the Spotify account
+        auth_manager = SpotifyOAuth(
+            client_id=client_id,
+            client_secret=client_secret,
+            redirect_uri=redirect_uri,
+            scope=scope,
+            username=username)
+        spotify = spotipy.Spotify(auth_manager=auth_manager)
+
+        # Selecting device to play from
+        devices = spotify.devices()
+
+        deviceID = None
+        for d in devices['devices']:
+            print(devices['devices'])
+            d['name'] = d['name'].replace('’', '\'')
+            if d['name'] == device_name:
+                deviceID = d['id']
 
         # Display image, find hands, then find their position
         while True:
             success, image = cap.read()
             image = tracker.handsFinder(image)
             lmList, xlmList, ylmList = tracker.positionFinder(image)
+
+            gv.CURR_TIME = time.time()
+            if gv.CURR_TIME <= gv.PREV_TIME + 2:
+                cv2.putText(image, str(gv.CURR_OPERATION), (10, 50), cv2.FONT_HERSHEY_PLAIN, 2,
+                            (200, 100, 200), 3)
 
             if len(lmList) != 0:
 
@@ -50,16 +81,16 @@ class HandControl:
                 # Pinky finger
                 x5, y5 = xlmList[20], ylmList[20]
 
-                if gv.CURR_TIME <= gv.PREV_TIME + 2:
-                    cv2.putText(image, str(gv.CURR_OPERATION), (10, 50), cv2.FONT_HERSHEY_PLAIN, 2,
-                                (200, 100, 200), 3)
-
-                gv.CURR_TIME = time.time()
-
                 # Play music (Insures middle finger is close to ring finger) 👌
                 if self.checkIfTouching(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5) \
                         & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pyautogui.press('playpause')
+                    try:
+                        pause_play(spotify=spotify, device_id=deviceID)
+                        print("Pause")
+                    except spotipy.exceptions.SpotifyException:
+                        print("Play")
+                        start_play(spotify=spotify, device_id=deviceID)
+
                     gv.CURR_OPERATION = "PLAY/PAUSE"
 
                     # Used for removing text from the screen after 3 seconds
@@ -69,7 +100,8 @@ class HandControl:
                 # Next Track (Middle finger and thumb touching)
                 if self.checkIfTouching(x1, y1, x3, y3, x2, y2, x4, y4, x5, y5) \
                         & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pyautogui.press('nexttrack')
+                    spotify.next_track()
+                    print("Next Track")
                     gv.CURR_OPERATION = "NEXT TRACK"
 
                     # Used for removing text from the screen after 3 seconds
@@ -79,7 +111,11 @@ class HandControl:
                 # Previous track (Thumb and pinky finger touching)
                 if self.checkIfTouching(x1, y1, x4, y4, x2, y2, x3, y3, x5, y5) \
                         & (gv.CURR_TIME >= gv.PREV_TIME + 1):
-                    pyautogui.press('prevtrack')
+                    try:
+                        spotify.previous_track()
+                        print("Previous Track")
+                    except spotipy.exceptions.SpotifyException:
+                        print("No previous track")
                     gv.CURR_OPERATION = "PREVIOUS TRACK"
 
                     # Used for removing text from the screen after 3 seconds
@@ -100,6 +136,3 @@ class HandControl:
 
             cv2.imshow("Video", image)
             cv2.waitKey(1)
-            if gv.CURR_TIME <= gv.PREV_TIME + 2:
-                cv2.putText(image, str(gv.CURR_OPERATION), (10, 50), cv2.FONT_HERSHEY_PLAIN, 2,
-                            (200, 100, 200), 3)
