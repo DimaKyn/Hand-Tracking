@@ -1,0 +1,23 @@
+In the file "HandTrackingControlClassTypeTwo.py" in one of the " elif's "
+
+This one:
+***********************************************************
+elif words[0] == "language" and words[1] == "russian":
+    language = "ru-RU"
+    continue
+***********************************************************
+    
+"russian" can be changed to any desired language, to do that, change these lines:
+
+1. words[1] = "your desired language"
+2. language = "language code"  - see "https://cloud.google.com/speech-to-text/docs/languages" for the full list of possible languages.
+
+For example, If you would like to search in French:
+
+words[1] = "french"
+language = "fr-FR"
+
+Note: The default language is english, upon exiting the Voice control mode, the voice recognition language will default back to English.
+
+
+                  
