@@ -1,5 +1,4 @@
-In the file "HandTrackingControlClassTypeTwo.py" in one of the " elif's "
-
+In the file "HandTrackingControlClassTypeTwo.py" in one of the " elif's ",
 This one:
 ***********************************************************
 elif words[0] == "language" and words[1] == "russian":
