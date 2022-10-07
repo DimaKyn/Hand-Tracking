@@ -1,6 +1,6 @@
 # Hand-Tracking
 
-This code combines Mediapipe's api for hand tracking and Jake Goodman's (Youtube: Jake Goodman/Github: https://github.com/jakegoodman01/Pepper) code to create a software which allows the control of Spotify using hand gestures and voice control, with added features.
+This code combines Mediapipe's api for hand tracking, the Spotipy API and Jake Goodman's (Youtube: Jake Goodman/Github: https://github.com/jakegoodman01/Pepper) code to create a software which allows the control of Spotify using hand gestures and voice control, with added features.
 
 Upon running this software, your default camera will turn on along with a window displaying what the camera captures.
 If the software runs for the first time, a tab will be opened, copy the link in your browser and paste it to the console/terminal (This will authorize your Spotify account with the software).
