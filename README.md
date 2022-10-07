@@ -8,9 +8,13 @@ If the software runs for the first time, a tab will be opened, copy the link in 
 Instructions:
 1. Hold your hand directly in front of the camera in the "High five" position.
 2. Touching the thumb with different fingers executes different commands:
+
    Index finger - Play/Pause.
+
    Middle finger - Next track.
+
    Ring finger - Previous track.
+
    Pinky finger - Voice control (Allows you to search for playlists/artists/tracks using your voice)
   
 3. Upon entering Voice control, the volume will halve and hand gestures will turn off until you say a command, here are the possible commands:
