@@ -6,8 +6,9 @@ Upon running this software, your default camera will turn on along with a window
 If the software runs for the first time, a tab will be opened, copy the link in your browser and paste it to the console/terminal (This will authorize your Spotify account with the software).
 
 Instructions:
-1. Hold your hand directly in front of the camera in the "High five" position.
-2. Touching the thumb with different fingers executes different commands:
+1. Run the "HandControlInterface.py" file to start the program.
+2. Hold your hand directly in front of the camera in the "High five" position.
+3. Touching the thumb with different fingers executes different commands:
 
    Index finger - Play/Pause.
 
@@ -17,7 +18,7 @@ Instructions:
 
    Pinky finger - Voice control (Allows you to search for playlists/artists/tracks using your voice)
   
-3. Upon entering Voice control, the volume will halve and hand gestures will turn off until you say a command, here are the possible commands:
+4. Upon entering Voice control, the volume will halve and hand gestures will turn off until you say a command, here are the possible commands:
 
    "album" + *name of an album* - This will play the chosen album.
    
