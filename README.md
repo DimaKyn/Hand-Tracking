@@ -14,10 +14,17 @@ Instructions:
    Pinky finger - Voice control (Allows you to search for playlists/artists/tracks using your voice)
   
 3. Upon entering Voice control, the volume will halve and hand gestures will turn off until you say a command, here are the possible commands:
+
    "album" + *name of an album* - This will play the chosen album.
+   
    "artist" + *name of an artist* - This will play the most popular tracks of the chosen artist.
+   
    "play" + *name of a track* - This will play the chosen track.
+   
    "playlist" + *name of a playlist* - This will play the first playlist with a corresponding name.
+   
    "queue" + *name of a track* - This will queue a track to be played later.
+   
    "language" + *Russian* - This will change the voice recognition to recognize Russian, (can work for different languages [see file: ChangeSearchLanguage] in this repository).
+   
    "nevermind" - this will turn off Voice control mode and will switch to Hand Gesture mode.
