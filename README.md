@@ -1,4 +1,7 @@
-# Hand-Tracking
+# Spotify-Hand-Tracking-And-Voice-Control
+
+Imagine washing the dishes or cooking something and having your hands wet or full of chunks of food, you could ask google voice control to play some music, but good luck playing something else cause the microphone can't hear you while its playing.
+This is the exact reason I made this software.
 
 This code combines Mediapipe's api for hand tracking, the Spotipy API and Jake Goodman's (Youtube: Jake Goodman/Github: https://github.com/jakegoodman01/Pepper) code to create a software which allows the control of Spotify using hand gestures and voice control, with added features.
 
