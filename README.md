@@ -1,5 +1,7 @@
 # Spotify-Hand-Tracking-And-Voice-Control
 
+******Work In Progress******
+
 Imagine washing the dishes or cooking something and having your hands wet or full of chunks of food, you could ask google voice control to play some music, but good luck playing something else cause the microphone can't hear you while its playing.
 This is the exact reason I made this software.
 
