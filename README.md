@@ -11,9 +11,19 @@ Upon running this software, your default camera will turn on along with a window
 If the software runs for the first time, a tab will be opened, copy the link in your browser and paste it to the console/terminal (This will authorize your Spotify account with the software).
 
 Instructions:
-1. Run the "HandControlInterface.py" file to start the program.
-2. Hold your hand directly in front of the camera in the "High five" position.
-3. Touching the thumb with different fingers executes different commands:
+1. Download this repository.
+2. Install Python 3.
+4. Run the following code in your terminal to install all required dependencies:
+```
+pip install opencv-python mediapipe spotipy pandas SpeechRecognition PyAudio
+```
+5. Run the "HandTrackingControlInterface.py" file to start the program.
+6. You will be navigated to a certain link in your default browser.
+7. If you are not logged in to your spotify account on your browser, you will be required to login.
+8. Copy and paste the link you were directed to by the software and paste it inside the UI.
+9. Once you press on the "Submit" button, your spotify account will be authenticated with this program.
+10. Hold your hand directly in front of the camera in the "High five" position.
+11. Touching the thumb with different fingers executes different commands:
 
    Index finger - Play/Pause.
 
@@ -23,7 +33,7 @@ Instructions:
 
    Pinky finger - Voice control (Allows you to search for playlists/artists/tracks using your voice)
   
-4. Upon entering Voice control, the volume will halve and hand gestures will turn off until you say a command, here are the possible commands:
+4. Upon entering Voice control, the volume will lower and hand gestures will turn off until you say a command, here are the possible commands:
 
    "album" + *name of an album* - This will play the chosen album.
    
@@ -37,4 +47,6 @@ Instructions:
    
    "language" + *Russian* - This will change the voice recognition to recognize Russian, (can work for different languages [see file: ChangeSearchLanguage] in this repository).
    
-   "nevermind" - this will turn off Voice control mode and will switch to Hand Gesture mode.
+   "nevermind" - This will turn off Voice control mode and will switch to Hand Gesture mode.
+
+   "Volume" + Number/"Half"/"Max"/"Maximum" - This will set the volume to your desired value.
