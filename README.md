@@ -12,8 +12,13 @@ If the software runs for the first time, a tab will be opened, copy the link in 
 
 Instructions:
 1. Download this repository.
-2. Install Python 3.
-4. Run the following code in your terminal to install all required dependencies:
+2. Go to https://developer.spotify.com/dashboard
+3. Create a new app > "Name it however you'd like"
+4. Go to Settings, and paste https://localhost:8888/callback in the "Redirect" input box.
+5. Now go to Settings > Copy SPOTIFY_CLIENT_SECRET and SPOTIFY_CLIENT_ID.
+6. Paste both SPOTIFY_CLIENT_SECRET and SPOTIFY_CLIENT_ID in the file "setup.txt" in the project directory.
+7. Install Python 3.
+8. Run the following code in your terminal to install all required dependencies:
 ```
 pip install opencv-python mediapipe spotipy pandas SpeechRecognition PyAudio
 ```
