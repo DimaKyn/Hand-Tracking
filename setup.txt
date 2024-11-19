@@ -1,5 +1,5 @@
-SPOTIFY_CLIENT_ID=287cf6980bd34b6ea623fa0b0e9c4d05
-SPOTIFY_CLIENT_SECRET=6f962df76e3f4129aa364ef328186ae9
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
 device_name=MyPC
 redirect_uri=https://localhost:8888/callback
 username=Default
